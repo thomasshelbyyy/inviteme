@@ -1,0 +1,24 @@
+﻿import './bootstrap'
+import '../css/app.css'
+
+import { createRoot } from 'react-dom/client'
+import { createInertiaApp } from '@inertiajs/react'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+
+const appName = (document.querySelector('meta[name="app-name"]') as HTMLMetaElement)?.content ?? 'InviteMe'
+
+createInertiaApp({
+    title: (title) => `${title} â€” ${appName}`,
+    resolve: (name) =>
+        resolvePageComponent(
+            `./pages/${name}.tsx`,
+            import.meta.glob('./pages/**/*.tsx'),
+        ),
+    setup({ el, App, props }) {
+        const root = createRoot(el)
+        root.render(<App {...props} />)
+    },
+    progress: {
+        color: '#C8956C',
+    },
+})

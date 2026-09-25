@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+@import 'tailwindcss';
+
+@theme {
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-elegant: 'Cormorant Garamond', Georgia, serif;
+
+    --color-brand-50: oklch(97% 0.02 30);
+    --color-brand-100: oklch(94% 0.04 30);
+    --color-brand-200: oklch(88% 0.08 30);
+    --color-brand-300: oklch(79% 0.12 30);
+    --color-brand-400: oklch(68% 0.16 30);
+    --color-brand-500: oklch(56% 0.18 30);
+    --color-brand-600: oklch(47% 0.17 30);
+    --color-brand-700: oklch(38% 0.14 30);
+    --color-brand-800: oklch(29% 0.11 30);
+    --color-brand-900: oklch(20% 0.07 30);
+
+    --color-rose-champagne: #f2e4d8;
+    --color-warm-ivory: #fdf8f3;
+    --color-dusty-rose: #c8956c;
+    --color-mauve: #8b5e5e;
+    --color-deep-plum: #4a2c2c;
+}
+
+:root {
+    --color-rose-champagne: #f2e4d8;
+    --color-warm-ivory: #fdf8f3;
+    --color-dusty-rose: #c8956c;
+    --color-mauve: #8b5e5e;
+    --color-deep-plum: #4a2c2c;
+}
+
+@layer base {
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background-color: var(--color-warm-ivory);
+        color: oklch(20% 0 0);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-display);
+        line-height: 1.2;
+    }
+}
+
+@layer utilities {
+    .font-display {
+        font-family: var(--font-display);
+    }
+
+    .font-elegant {
+        font-family: var(--font-elegant);
+    }
+
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .glass {
+        backdrop-filter: blur(16px) saturate(180%);
+        background-color: rgb(255 255 255 / 0.7);
+        border: 1px solid rgb(255 255 255 / 0.5);
+    }
+
+    .glass-dark {
+        backdrop-filter: blur(16px) saturate(180%);
+        background-color: rgb(0 0 0 / 0.4);
+        border: 1px solid rgb(255 255 255 / 0.1);
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease-out both;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.6s ease-out both;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ─── Tiptap / ProseMirror ───────────────────────────────────────────────── */
+
+.ProseMirror {
+    outline: none;
+    min-height: 60px;
+    width: 100%;
+    line-height: 1.7;
+}
+
+/* Placeholder text (Tiptap Placeholder extension) */
+.ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #adb5bd;
+    pointer-events: none;
+    height: 0;
+}
+
+/* Visual cue that the editor is in edit mode */
+.tiptap-editing .ProseMirror {
+    cursor: text;
+    border-bottom: 1px dashed rgba(200, 149, 108, 0.4);
+    padding-bottom: 4px;
+}
+
+/* Inline images inside rich text */
+.ProseMirror img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 8px auto;
+    display: block;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Selected image highlight */
+.ProseMirror img.ProseMirror-selectednode {
+    outline: 2px solid #c8956c;
+    outline-offset: 2px;
+}
+
+/* Links inside rich text */
+.tiptap-link {
+    color: #c8956c;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* Headings inside Tiptap — inherit colour from block theme via inline style */
+.ProseMirror h1 { font-size: 2em;   font-weight: 700; line-height: 1.2; margin: 0.5em 0; }
+.ProseMirror h2 { font-size: 1.5em; font-weight: 700; line-height: 1.3; margin: 0.5em 0; }
+.ProseMirror h3 { font-size: 1.2em; font-weight: 600; line-height: 1.4; margin: 0.4em 0; }
+
+/* Lists */
+.ProseMirror ul { list-style: disc;    padding-left: 1.5em; margin: 0.5em 0; }
+.ProseMirror ol { list-style: decimal; padding-left: 1.5em; margin: 0.5em 0; }
+.ProseMirror li { margin: 0.2em 0; }
+
+/* Blockquote */
+.ProseMirror blockquote {
+    border-left: 3px solid #c8956c;
+    padding-left: 1em;
+    margin: 0.5em 0;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Horizontal rule */
+.ProseMirror hr {
+    border: none;
+    border-top: 1px solid rgba(200, 149, 108, 0.3);
+    margin: 1em 0;
+}
