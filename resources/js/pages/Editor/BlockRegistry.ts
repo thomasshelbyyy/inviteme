@@ -1,7 +1,9 @@
 import React from 'react'
-import { Type, Image, Calendar, Clock, MapPin, Music, ImageIcon, MessageSquare, List, LayoutTemplate, Gift, Divide } from 'lucide-react'
+import { Type, Image, Calendar, Clock, MapPin, Music, ImageIcon, MessageSquare, List, LayoutTemplate, Gift, Divide, BookOpen } from 'lucide-react'
 import HeroBlock from './blocks/HeroBlock'
 import HeroProperties from './blocks/HeroProperties'
+import CoverBlock from './blocks/CoverBlock'
+import CoverProperties from './blocks/CoverProperties'
 import CountdownBlock from './blocks/CountdownBlock'
 import CountdownProperties from './blocks/CountdownProperties'
 import RsvpBlock from './blocks/RsvpBlock'
@@ -33,6 +35,23 @@ export interface BlockDefinition {
 }
 
 export const blockRegistry: Record<string, BlockDefinition> = {
+    cover: {
+        type: 'cover',
+        name: 'Cover',
+        icon: BookOpen,
+        category: 'header',
+        defaultProps: {
+            title: 'Pernikahan Rome & Juliet',
+            subtitle: 'Kami mengundang Anda',
+            bgImage: '',
+            buttonText: 'Buka Undangan',
+            overlayColor: '#000000',
+            overlayOpacity: 50,
+        },
+        component: CoverBlock,
+        propertiesComponent: CoverProperties,
+        hasResizeHandle: false,
+    },
     hero: {
         type: 'hero',
         name: 'Hero Cover',

@@ -4,6 +4,20 @@ import { Trash2 } from 'lucide-react'
 import type { CanvasElement } from '@/types'
 import { useEditorStore } from '../Store'
 import MediaPicker from '../components/MediaPicker'
+import { motion } from 'framer-motion'
+
+const getAnimationVariants = (type?: string) => {
+    switch (type) {
+        case 'fade': return { hidden: { opacity: 0 }, visible: { opacity: 1 } }
+        case 'slide-up': return { hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0 } }
+        case 'slide-down': return { hidden: { opacity: 0, y: -50 }, visible: { opacity: 1, y: 0 } }
+        case 'slide-left': return { hidden: { opacity: 0, x: 50 }, visible: { opacity: 1, x: 0 } }
+        case 'slide-right': return { hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0 } }
+        case 'zoom-in': return { hidden: { opacity: 0, scale: 0.5 }, visible: { opacity: 1, scale: 1 } }
+        case 'bounce': return { hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0, transition: { type: 'spring', bounce: 0.6 } } }
+        default: return { hidden: { opacity: 1, x: 0, y: 0, scale: 1 }, visible: { opacity: 1, x: 0, y: 0, scale: 1 } }
+    }
+}
 
 // ─── Element Renderers ─────────────────────────────────────────────────────
 
@@ -137,7 +151,7 @@ function ElementContent({
 
 // ─── Main Component ────────────────────────────────────────────────────────
 
-export default function CanvasContainerBlock({ props, theme, blockId }: any) {
+export default function CanvasContainerBlock({ props, theme, blockId, isPublic }: any) {
     const {
         containerHeight = 400,
         referenceWidth = 600,
@@ -243,6 +257,50 @@ export default function CanvasContainerBlock({ props, theme, blockId }: any) {
                     {sorted.map((element) => {
                         const isSelected = isBlockActive && activeElementId === element.id
                         const isTextEditing = textEditingId === element.id
+                        
+                        if (isPublic) {
+                            const isAnimated = element.animationType && element.animationType !== 'none'
+                            
+                            if (isAnimated) {
+                                return (
+                                    <motion.div
+                                        key={element.id}
+                                        initial="hidden"
+                                        whileInView="visible"
+                                        viewport={{ once: true, amount: 0.2 }}
+                                        variants={getAnimationVariants(element.animationType)}
+                                        transition={{ duration: element.animationDuration ?? 1.0, delay: element.animationDelay ?? 0.0 }}
+                                        style={{
+                                            position: 'absolute',
+                                            left: element.x,
+                                            top: element.y,
+                                            width: element.width,
+                                            height: element.height,
+                                            zIndex: element.zIndex
+                                        }}
+                                    >
+                                        <ElementContent element={element} isSelected={false} isEditing={false} isTextEditing={false} onDoubleClick={() => {}} onTextChange={() => {}} />
+                                    </motion.div>
+                                )
+                            }
+                            
+                            // Static rendering if no animation
+                            return (
+                                <div
+                                    key={element.id}
+                                    style={{
+                                        position: 'absolute',
+                                        left: element.x,
+                                        top: element.y,
+                                        width: element.width,
+                                        height: element.height,
+                                        zIndex: element.zIndex
+                                    }}
+                                >
+                                    <ElementContent element={element} isSelected={false} isEditing={false} isTextEditing={false} onDoubleClick={() => {}} onTextChange={() => {}} />
+                                </div>
+                            )
+                        }
 
                         return (
                             <Rnd

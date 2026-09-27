@@ -24,7 +24,10 @@ export default function PublicInvitation({ invitation, guest }: Props) {
     const design = invitation.design
     const [isPlaying, setIsPlaying] = useState(false)
     const [hasInteracted, setHasInteracted] = useState(false)
+    const [isOpened, setIsOpened] = useState(false)
     const audioRef = useRef<HTMLAudioElement>(null)
+    
+    const hasCover = design?.blocks?.some(b => b.type === 'cover' && b.visible)
 
     useEffect(() => {
         const handleInteraction = () => {
@@ -69,7 +72,7 @@ export default function PublicInvitation({ invitation, guest }: Props) {
 
     return (
         <div
-            className="min-h-screen w-full relative overflow-x-hidden font-body"
+            className={`${hasCover && !isOpened ? 'h-screen overflow-hidden' : 'min-h-screen'} w-full relative overflow-x-hidden font-body`}
             style={{
                 backgroundColor: design.theme?.backgroundColor ?? '#FDF8F3',
             }}
@@ -145,8 +148,11 @@ export default function PublicInvitation({ invitation, guest }: Props) {
                     return (
                         <BlockComponent 
                             key={block.id} 
-                            props={block.props} 
-                            theme={design.theme} 
+                            props={{...block.props, guestName: guest?.name}} 
+                            theme={design.theme}
+                            isPublic={true}
+                            isOpened={isOpened}
+                            onOpen={() => setIsOpened(true)}
                         />
                     )
                 })}

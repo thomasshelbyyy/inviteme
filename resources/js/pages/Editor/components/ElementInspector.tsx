@@ -315,6 +315,64 @@ export default function ElementInspector({ element, blockId }: Props) {
             </section>
 
             {/* ── Delete ───────────────────────────────────────────────────── */}
+            {/* --- Animasi --- */}
+            <section className="space-y-3 pt-4 border-t border-gray-100">
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Animasi (Saat Muncul)</h4>
+                
+                <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Tipe Animasi</label>
+                    <select
+                        value={element.animationType || 'none'}
+                        onChange={(e) => update({ animationType: e.target.value as any })}
+                        className="w-full text-sm rounded-lg border-gray-200 focus:ring-[#c8956c] focus:border-[#c8956c]"
+                    >
+                        <option value="none">Tidak Ada</option>
+                        <option value="fade">Fade In (Memudar)</option>
+                        <option value="slide-up">Slide Up (Naik)</option>
+                        <option value="slide-down">Slide Down (Turun)</option>
+                        <option value="slide-left">Slide Left (Kiri)</option>
+                        <option value="slide-right">Slide Right (Kanan)</option>
+                        <option value="zoom-in">Zoom In (Membesar)</option>
+                        <option value="bounce">Bounce (Memantul)</option>
+                    </select>
+                </div>
+
+                {element.animationType && element.animationType !== 'none' && (
+                    <>
+                        <div>
+                            <label className="flex items-center justify-between text-xs font-medium text-gray-700 mb-1">
+                                <span>Durasi (Kecepatan)</span>
+                                <span className="font-mono text-[#c8956c]">{element.animationDuration ?? 1.0}s</span>
+                            </label>
+                            <input
+                                type="range"
+                                min="0.1"
+                                max="3.0"
+                                step="0.1"
+                                value={element.animationDuration ?? 1.0}
+                                onChange={(e) => update({ animationDuration: parseFloat(e.target.value) })}
+                                className="w-full accent-[#c8956c]"
+                            />
+                        </div>
+                        <div>
+                            <label className="flex items-center justify-between text-xs font-medium text-gray-700 mb-1">
+                                <span>Delay (Jeda Masuk)</span>
+                                <span className="font-mono text-[#c8956c]">{element.animationDelay ?? 0.0}s</span>
+                            </label>
+                            <input
+                                type="range"
+                                min="0.0"
+                                max="3.0"
+                                step="0.1"
+                                value={element.animationDelay ?? 0.0}
+                                onChange={(e) => update({ animationDelay: parseFloat(e.target.value) })}
+                                className="w-full accent-[#c8956c]"
+                            />
+                        </div>
+                    </>
+                )}
+            </section>
+
             <button
                 onClick={() => removeElement(blockId, element.id)}
                 className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"

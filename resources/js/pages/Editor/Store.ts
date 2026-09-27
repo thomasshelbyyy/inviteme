@@ -226,6 +226,9 @@ export const useEditorStore = create<EditorState>((set, get) => ({
             fill2: '#8b5e5e',
             gradientDirection: 'to right',
             rotation: 0,
+            animationType: 'none',
+            animationDuration: 1.0,
+            animationDelay: 0.0,
         }
 
         if (elementType === 'line') {

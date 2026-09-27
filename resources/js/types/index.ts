@@ -103,6 +103,10 @@ export interface CanvasElement {
     gradientDirection: string
     /** Line/triangle rotation in degrees */
     rotation: number
+    /** Animation settings */
+    animationType?: 'none' | 'fade' | 'slide-up' | 'slide-down' | 'slide-left' | 'slide-right' | 'zoom-in' | 'bounce'
+    animationDuration?: number
+    animationDelay?: number
 }
 
 export interface Guest {
