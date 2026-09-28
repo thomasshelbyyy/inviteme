@@ -58,10 +58,11 @@ class PaymentService
 
         $snapToken = Snap::getSnapToken($params);
 
-        // Persist the gateway order ID for webhook matching
+        // Persist the gateway order ID for webhook matching and save snap_token for resuming
         $order->update([
             'gateway_order_id' => $order->id,
             'payment_gateway' => 'midtrans',
+            'gateway_payload' => ['snap_token' => $snapToken],
         ]);
 
         return $snapToken;

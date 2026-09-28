@@ -62,10 +62,25 @@ class BillingController extends Controller
             ], 422);
         }
 
-        // Cancel any lingering pending orders for this invitation+plan
-        Order::where('invitation_id', $invitation->id)
+        // Check if there is already a pending order for this exact plan
+        $existingPendingOrder = Order::where('invitation_id', $invitation->id)
             ->where('status', OrderStatus::Pending)
-            ->delete();
+            ->first();
+
+        if ($existingPendingOrder) {
+            // If it's the exact same plan AND has a snap_token, resume it
+            if ($existingPendingOrder->plan === $plan->key && isset($existingPendingOrder->gateway_payload['snap_token'])) {
+                return response()->json([
+                    'snap_token' => $existingPendingOrder->gateway_payload['snap_token'],
+                    'order_id' => $existingPendingOrder->id,
+                    'amount' => $existingPendingOrder->amount,
+                    'client_key' => config('midtrans.client_key'),
+                ]);
+            }
+
+            // Otherwise (different plan, or legacy order without token), delete it and create a new one
+            $existingPendingOrder->delete();
+        }
 
         // Create a fresh pending order
         $order = Order::create([

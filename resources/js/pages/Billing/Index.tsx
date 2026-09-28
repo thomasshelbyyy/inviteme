@@ -51,6 +51,18 @@ export default function BillingIndex({ plans, orders, invitations }: PageProps) 
 
     const closeDialog = () => setDialogConfig((prev) => ({ ...prev, isOpen: false }))
     
+    const handleResumePayment = (snapToken: string) => {
+        if (!snapToken) return
+        window.snap.pay(snapToken, {
+            onSuccess: () => window.location.reload(),
+            onPending: () => window.location.reload(),
+            onError: () => window.location.reload(),
+            onClose: () => {
+                // Do nothing
+            }
+        })
+    }
+
     const handleBuy = async (planKey: string) => {
         if (!selectedInvitationId) {
             setDialogConfig({
@@ -258,7 +270,7 @@ export default function BillingIndex({ plans, orders, invitations }: PageProps) 
                                                 <td className="px-6 py-4 font-medium">
                                                     {formatCurrency(order.amount)}
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-6 py-4 flex items-center gap-3">
                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                                         order.status === 'paid' ? 'bg-green-100 text-green-800' :
                                                         order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -266,6 +278,14 @@ export default function BillingIndex({ plans, orders, invitations }: PageProps) 
                                                     }`}>
                                                         {order.status}
                                                     </span>
+                                                    {order.status === 'pending' && order.gateway_payload?.snap_token && (
+                                                        <button 
+                                                            onClick={() => handleResumePayment(order.gateway_payload.snap_token)}
+                                                            className="text-xs font-semibold text-[#c8956c] hover:text-[#8b5e5e] underline transition-colors"
+                                                        >
+                                                            Lanjutkan
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}
